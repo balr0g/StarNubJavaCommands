@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0</version>
     <modules>
+        <module>Uptime</module>
     </modules>
 
     <name>StarnubJavaCommands</name>
@@ -44,7 +45,7 @@
         <dependency>
             <groupId>org.starnub</groupId>
             <artifactId>starnub</artifactId>
-            <version>1.5-beta-SNAPSHOT</version>
+            <version>1.08-beta-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
