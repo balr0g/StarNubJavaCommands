@@ -1,11 +1,12 @@
 {
+     'owner': 'StarNub',
      'name': 'Uptime',
+     'version': 1.0,
      'class': 'org.starnub.commands.Uptime',
-     'command': 'uptime',
      'main_args':['starbound', 'starnub'],
      'custom_split': {},
      'can_use': 2,
-     'version': 1.0,
+     "dependancies": [],
      'author': 'Underbalanced',
      'URL': 'http://www.starnub.org',
      'description': 'This will will provide the uptime of StarNub or Starbound server(s)!'
