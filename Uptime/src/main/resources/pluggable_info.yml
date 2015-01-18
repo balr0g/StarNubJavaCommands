@@ -4,10 +4,10 @@
      'version': 1.0,
      'class': 'org.starnub.commands.Uptime',
      'main_args':['starbound', 'starnub'],
-     'custom_split': {},
+     'custom_split': 0,
      'can_use': 2,
      "dependancies": [],
      'author': 'Underbalanced',
-     'URL': 'http://www.starnub.org',
+     'url': 'http://www.starnub.org',
      'description': 'This will will provide the uptime of StarNub or Starbound server(s)!'
 }

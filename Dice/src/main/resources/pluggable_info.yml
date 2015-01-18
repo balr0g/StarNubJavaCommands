@@ -1,0 +1,13 @@
+{
+     'owner': 'StarNub',
+     'name': 'Roll',
+     'version': 1.0,
+     'class': 'org.starnub.commands.Dice',
+     'main_args':[],
+     'custom_split': 0,
+     'can_use': 2,
+     "dependancies": [],
+     'author': 'Underbalanced',
+     'url': 'http://www.starnub.org',
+     'description': 'Lets roll some dice!'
+}

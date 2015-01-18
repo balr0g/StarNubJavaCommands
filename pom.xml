@@ -10,6 +10,7 @@
     <version>1.0</version>
     <modules>
         <module>Uptime</module>
+        <module>Dice</module>
     </modules>
 
     <name>StarnubJavaCommands</name>
