@@ -15,6 +15,7 @@ public class Dice extends Command {
             String arg = args[0];
             String[] dice = arg.split("d");
             if (dice.length == 2){
+                String diceOrDices;
                 int diceCount = 0;
                 int diceSize = 0;
                 try {
@@ -28,6 +29,14 @@ public class Dice extends Command {
                 if (diceCount == 0 || diceSize == 0){
                     return;
                 }
+                if (diceCount > 20){
+                    sendMessage(playerSession, "You can not roll more than 20 dice at a time.");
+                    return;
+                }
+                if (diceSize > 500){
+                    sendMessage(playerSession, "Wha? When did dice have over 500 sides.");
+                    return;
+                }
                 String diceRollString = "";
                 int total = 0;
                 for (int i = 0; i < diceCount; i++) {
@@ -35,9 +44,15 @@ public class Dice extends Command {
                     total = total + randInt;
                     diceRollString = diceRollString + randInt + ", ";
                 }
+                if (diceCount == 1){
+                    diceOrDices = "die";
+                } else {
+                    diceOrDices = "dice";
+                }
                 String trimFromString = StringUtilities.trimFromString(diceRollString, ",", "");
-                trimFromString = trimFromString + "(" + total + ")";
-                sendMessage(playerSession, "You rolled: " + trimFromString);
+                trimFromString = trimFromString + " (" + total + ")";
+                String playerName = playerSession.getGameName();
+                PlayerSession.sendChatBroadcastToClientsAll("StarNub", playerName + " rolled " + diceCount + ", " + diceSize + " sided " + diceOrDices + ": " + trimFromString);
             } else {
                 sendMessage(playerSession, "You did not supply a proper dice. The formal is \"#d#\" The first number is how many dice you roll, and the second number is how many sides the dice have. For example, to roll 2 six-sided dice, use /roll 2d6.");
             }

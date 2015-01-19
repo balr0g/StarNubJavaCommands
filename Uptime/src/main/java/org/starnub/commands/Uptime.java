@@ -2,10 +2,8 @@ package org.starnub.commands;
 
 import org.starnub.starnubserver.StarNub;
 import org.starnub.starnubserver.connections.player.session.PlayerSession;
-import org.starnub.starnubserver.events.starnub.StarNubEventHandler;
 import org.starnub.starnubserver.pluggable.Command;
 import org.starnub.utilities.events.Priority;
-import org.starnub.utilities.events.types.ObjectEvent;
 import org.starnub.utilities.time.DateAndTimes;
 
 public class Uptime extends Command {
@@ -41,23 +39,7 @@ public class Uptime extends Command {
 
     @Override
     public void onRegister() {
-        newStarNubEventSubscription(Priority.LOW, "StarNub_Uptime", new StarNubUptimeHandler());
-        newStarNubEventSubscription(Priority.LOW, "Starbound_Uptime", new StarboundUptimeHandler());
-    }
-
-    class StarNubUptimeHandler extends StarNubEventHandler{
-
-        @Override
-        public void onEvent(ObjectEvent objectEvent) {
-            starnubUptime = (long) objectEvent.getEVENT_DATA();
-        }
-    }
-
-    class StarboundUptimeHandler extends StarNubEventHandler{
-
-        @Override
-        public void onEvent(ObjectEvent objectEvent) {
-            starboundUptime = (long) objectEvent.getEVENT_DATA();
-        }
+        newStarNubEventSubscription(Priority.LOW, "StarNub_Uptime", objectEvent -> starnubUptime = (long) objectEvent.getEVENT_DATA());
+        newStarNubEventSubscription(Priority.LOW, "Starbound_Uptime",objectEvent -> starboundUptime = (long) objectEvent.getEVENT_DATA());
     }
 }
