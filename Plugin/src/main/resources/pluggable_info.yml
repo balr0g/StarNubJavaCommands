@@ -1,0 +1,14 @@
+{
+     'owner': 'StarNub',
+     'command': 'Plugins',
+     'version': 1.0,
+     'class': 'org.starnub.commands.Plugins',
+     'unloadable': true,
+     'main_args':['load', 'unload', 'update', 'enable', 'disable', 'info', 'list'],
+     'custom_split': 0,
+     'can_use': 2,
+     'dependencies': [],
+     'author': 'Underbalanced',
+     'url': 'http://www.starnub.org',
+     'description': 'This provides commands to manipulate StarNub Server plugins!'
+}

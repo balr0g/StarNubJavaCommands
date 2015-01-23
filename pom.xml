@@ -10,7 +10,8 @@
     <version>1.0</version>
     <modules>
         <module>Uptime</module>
-        <module>Dice</module>
+        <module>Plugin</module>
+        <module>RollDice</module>
     </modules>
 
     <name>StarnubJavaCommands</name>
