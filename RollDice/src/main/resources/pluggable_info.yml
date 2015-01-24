@@ -1,5 +1,5 @@
 {
-     'owner': 'StarNub',
+     'organization': 'StarNub',
      'command': 'Roll',
      'version': 1.0,
      'class': 'org.starnub.commands.Roll',

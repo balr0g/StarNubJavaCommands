@@ -1,0 +1,14 @@
+{
+     'organization': 'StarNub',
+     'command': 'Commands',
+     'version': 1.0,
+     'class': 'org.starnub.commands.Commands',
+     'unloadable': true,
+     'main_args':['load', 'unload', 'update', 'info', 'list', 'mine', 'lookup'],
+     'custom_split': 0,
+     'can_use': 2,
+     'dependencies': [],
+     'author': 'Underbalanced',
+     'url': 'http://www.starnub.org',
+     'description': 'This provides commands to manipulate StarNub Server commands!'
+}

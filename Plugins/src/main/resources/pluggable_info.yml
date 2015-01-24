@@ -1,5 +1,5 @@
 {
-     'owner': 'StarNub',
+     'organization': 'StarNub',
      'command': 'Plugins',
      'version': 1.0,
      'class': 'org.starnub.commands.Plugins',

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>plugin</artifactId>
+    <artifactId>pluginscmd</artifactId>
     <version>1.0</version>
 
 

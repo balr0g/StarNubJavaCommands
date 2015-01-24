@@ -7,6 +7,7 @@ import org.starnub.starnubserver.pluggable.PluggableManager;
 import org.starnub.starnubserver.pluggable.Plugin;
 import org.starnub.starnubserver.pluggable.commandprocessor.*;
 import org.starnub.starnubserver.pluggable.generic.LoadSuccess;
+import org.starnub.starnubserver.pluggable.generic.PluggableReturn;
 import org.starnub.utilities.strings.StringUtilities;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Plugins extends Command {
     public Plugins() {
         EndNode all = new EndNode("all", ArgumentType.STATIC, this::allPlugins);
         EndNode variable = new EndNode("{plugin-name}", ArgumentType.VARIABLE, this::plugin);
-        EndNode infoVariable = new EndNode("{plugin-name}, Optional{name, owner, progamlanguage, version, size, author, url, description, dependancies, permissions} - Can use more then one at a time.", ArgumentType.VARIABLE, this::pluginInfo);
+        EndNode infoVariable = new EndNode("{plugin-name} Optional: {name, owner, progamlanguage, version, size, author, url, description, dependancies, permissions} - Can use more then one at a time.", ArgumentType.VARIABLE, this::pluginInfo);
         EndNode list = new EndNode("list", ArgumentType.STATIC, this::pluginList);
         SubNode loadEnable = new SubNode("enable", all, variable);
         SubNode load = new SubNode("load", loadEnable, all, variable);
@@ -76,6 +77,7 @@ public class Plugins extends Command {
                     return;
                 }
                 boolean enabled = plugin.isEnabled();
+                plugin.unregister();
                 plugin.disable();
                 PluggableManager.getInstance().getPLUGINS().remove(plugin.getDetails().getNAME().toLowerCase());
                 if (!enabled){
@@ -96,6 +98,7 @@ public class Plugins extends Command {
                     return;
                 }
                 if (!plugin.isEnabled()) {
+                    plugin.register();
                     plugin.enable();
                     sendMessage(playerSession, "Plugin " + plugin.getDetails().getNameVersion() + " was successfully enabled.");
                 } else {
@@ -126,8 +129,8 @@ public class Plugins extends Command {
         if (plugin == null){
             return;
         }
-        String requestedInfo = "Requested Plugin Info: ";
-        if (argsCount >= 2){
+        String requestedInfo = "";
+        if (argsCount == 2){
             requestedInfo = getOwnerString(requestedInfo, plugin) +
                             getNameString(requestedInfo, plugin) +
                             getAuthorString(requestedInfo, plugin) +
@@ -185,16 +188,16 @@ public class Plugins extends Command {
                 }
             }
         }
-        sendMessage(playerSession, requestedInfo);
+        sendMessage(playerSession, "Requested \"" + pluginName + "\" Plugin Info: " + requestedInfo);
     }
 
     private Plugin getPlugin(PlayerSession playerSession, String pluginName){
-        HashSet<Plugin> nearMatchs = PluggableManager.getInstance().getSpecificLoadedPluginOrNearMatchs(pluginName);
-        if (nearMatchs.size() == 1){
-            return (Plugin) nearMatchs.toArray()[0];
+        PluggableReturn<Plugin> pluggableReturn = PluggableManager.getInstance().getSpecificLoadedPluginOrNearMatchs(pluginName);
+        if (pluggableReturn.size() == 1 && pluggableReturn.isExactMatch()){
+            return pluggableReturn.get(0);
         } else {
             String nearMatches = "";
-            for(Plugin plugin : nearMatchs){
+            for(Plugin plugin : pluggableReturn){
                 nearMatches = nearMatches + plugin.getDetails().getNameVersion() + ", ";
             }
             sendMessage(playerSession, "Could not find a Plugin named \"" + pluginName + "\". Here are some near matches: " + StringUtilities.trimCommaForPeriod(nearMatches));
@@ -203,13 +206,13 @@ public class Plugins extends Command {
     }
 
     private String getOwnerString(String addTo, Plugin plugin){
-        String owner = plugin.getDetails().getOWNER();
-        return addTo + "Owner: " + owner + ".";
+        String owner = plugin.getDetails().getORGANIZATION();
+        return addTo + "Organization: " + owner + ". ";
     }
 
     private String getNameString(String addTo, Plugin plugin){
         String name = plugin.getDetails().getNAME();
-        return addTo + "Name: " + name + ".";
+        return addTo + "Name: " + name + ". ";
     }
 
     private String getProgramLanguageString(String addTo, Plugin plugin){
@@ -220,42 +223,48 @@ public class Plugins extends Command {
         } else if (language == PluggableFileType.PYTHON) {
             languageString = "Python";
         }
-        return addTo + "Program Language: " + languageString + ".";
+        return addTo + "Program Language: " + languageString + ". ";
     }
 
     private String getVersionString(String addTo, Plugin plugin){
         double version = plugin.getDetails().getVERSION();
-        return addTo + "Version: " + version + ".";
+        return addTo + "Version: " + version + ". ";
     }
 
     private String getSizeString(String addTo, Plugin plugin){
         double size = plugin.getDetails().getSIZE_KBS();
-        return addTo + "Size: " + size + "KBs.";
+        return addTo + "Size: " + Double.toString((double) Math.round(size * 100) / 100) + "KBs. ";
     }
 
     private String getAuthorString(String addTo, Plugin plugin){
         String author = plugin.getDetails().getAUTHOR();
-        return addTo + "Author: " + author + ".";
+        return addTo + "Author: " + author + ". ";
     }
 
     private String getURLString(String addTo, Plugin plugin){
         String url = plugin.getDetails().getURL();
-        return addTo + "URL: " + url + ".";
+        return addTo + "URL: " + url + ". ";
     }
 
     private String getDescriptionString(String addTo, Plugin plugin){
         String description = plugin.getDetails().getDESCRIPTION();
-        return addTo + "Description: " + description + ".";
+        return addTo + "Description: " + description + " ";
     }
 
     private String getDependenciesString(String addTo, Plugin plugin){
-        String dependencies = plugin.getDetails().getURL();
-        return addTo + "Dependencies: " + dependencies + ".";
+        String[] dependencies = plugin.getDetails().getDEPENDENCIES();
+        if (dependencies.length == 0){
+            dependencies =  new String[]{"None"};
+        }
+        return addTo + "Dependencies: " + Arrays.toString(dependencies) + ". ";
     }
 
     private String getPermissionsString(String addTo, Plugin plugin){
         String[] permissions = plugin.getAdditionalPermissions();
-        return addTo + "Permissions: " + Arrays.toString(permissions) + ".";
+        if (permissions.length == 0){
+            permissions =  new String[]{"None"};
+        }
+        return addTo + "Permissions: " + Arrays.toString(permissions) + ". ";
     }
 
     public void allPlugins(PlayerSession playerSession, int argsCount, String[] args){
