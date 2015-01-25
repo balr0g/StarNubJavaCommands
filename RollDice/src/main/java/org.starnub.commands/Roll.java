@@ -11,8 +11,9 @@ public class Roll extends Command {
     private final RootNode ROOT_COMMAND_NODE;
 
     public Roll() {
-        EndNode variable = new EndNode("{#d#}", ArgumentType.VARIABLE, this::playingDice);
-        SubNode baseNode = new SubNode("roll", this::wantToPlayDice , variable);
+        EndNode dice = new EndNode("{#d#}", ArgumentType.VARIABLE, this::playingDice);
+        EndNode play = new EndNode("play", ArgumentType.STATIC, this::wantToPlayDice);
+        SubNode baseNode = new SubNode("roll" , play, dice);
         ROOT_COMMAND_NODE = new RootNode(baseNode);
     }
 
@@ -44,7 +45,11 @@ public class Roll extends Command {
             int diceSize = 0;
             try {
                 String diceCountString = dice[0];
-                diceCount = Integer.parseInt(diceCountString);
+                if (diceCountString.isEmpty()){
+                    diceCount = 1;
+                } else {
+                    diceCount = Integer.parseInt(diceCountString);
+                }
                 String diceSizeString = dice[1];
                 diceSize = Integer.parseInt(diceSizeString);
             } catch (NumberFormatException e){
