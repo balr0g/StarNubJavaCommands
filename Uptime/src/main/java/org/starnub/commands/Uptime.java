@@ -8,6 +8,7 @@ import org.starnub.utilities.events.Priority;
 import org.starnub.utilities.time.DateAndTimes;
 
 public class Uptime extends Command {
+
     private final RootNode ROOT_COMMAND_NODE;
     private long starboundUptime = 0L;
     private long starnubUptime = 0L;
@@ -15,7 +16,8 @@ public class Uptime extends Command {
     public Uptime() {
         EndNode starbound = new EndNode("starbound", ArgumentType.STATIC, this::starbound);
         EndNode starnub = new EndNode("starnub", ArgumentType.STATIC, this::starnub);
-        SubNode baseNode = new SubNode("uptime", this::allTime , starbound, starnub);
+        EndNode allTime = new EndNode("all", ArgumentType.STATIC, this::allTime);
+        SubNode baseNode = new SubNode("uptime", starbound, starnub, allTime);
         ROOT_COMMAND_NODE = new RootNode(baseNode);
     }
 
@@ -36,9 +38,7 @@ public class Uptime extends Command {
     }
 
     private void allTime(PlayerSession playerSession, int argsCount, String[] args){
-        String starnub = getUptimeString("StarNub", starnubUptime);
-        String starbound = getUptimeString("Starbound", starboundUptime);
-        messageSend(playerSession, starnub + " " + starbound);
+        messageSend(playerSession, getUptimeString("StarNub", starnubUptime, "Starbound", starboundUptime));
     }
 
     private void starbound(PlayerSession playerSession, int argsCount, String[] args){
@@ -51,7 +51,13 @@ public class Uptime extends Command {
 
     private String getUptimeString(String uptimeName, long time){
         String formattedTime = DateAndTimes.getPeriodFormattedFromMilliseconds(time, false);
-        return String.format("The current up-time of the %s Server is %s.", uptimeName, formattedTime);
+        return String.format("Current up-time for the %s Server is %s.", uptimeName, formattedTime);
+    }
+
+    private String getUptimeString(String uptimeName, long time, String uptimeName2, long time2){
+        String formattedTime = DateAndTimes.getPeriodFormattedFromMilliseconds(time, false);
+        String formattedTime2 = DateAndTimes.getPeriodFormattedFromMilliseconds(time, false);
+        return String.format("Current up-time: %s Server %s & %s Server %s.", uptimeName, formattedTime, uptimeName2, formattedTime2);
     }
 
     private void messageSend(PlayerSession playerSession, String message){

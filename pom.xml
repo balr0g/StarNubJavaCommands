@@ -13,6 +13,7 @@
         <module>Plugins</module>
         <module>RollDice</module>
         <module>Commands</module>
+        <module>JoinLeave</module>
     </modules>
 
     <name>StarnubJavaCommands</name>
@@ -32,7 +33,7 @@
             <id>StarNubInternal</id>
             <url>http://repo.starnub.org/repository/internal/</url>
             <releases>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </releases>
         </repository>
         <repository>
@@ -43,6 +44,18 @@
             </releases>
         </repository>
     </repositories>
+
+    <!-- Deploy to remote repo -->
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <url>http://repo.starnub.org/repository/internal/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://repo.starnub.org/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -70,6 +83,32 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+
+            <!-- THIS IS USED TO PLACE ALL MODULES IN ONE DIRECTORY FOR EASY MASS UPDATING -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-artifact</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>${project.packaging}</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>../.file_output</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

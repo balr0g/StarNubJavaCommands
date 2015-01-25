@@ -38,6 +38,7 @@ public class Plugins extends Command {
 
     @Override
     public void onRegister() {
+
     }
 
     @Override
@@ -98,8 +99,8 @@ public class Plugins extends Command {
                     return;
                 }
                 if (!plugin.isEnabled()) {
-                    plugin.register();
                     plugin.enable();
+                    plugin.register();
                     sendMessage(playerSession, "Plugin " + plugin.getDetails().getNameVersion() + " was successfully enabled.");
                 } else {
                     sendMessage(playerSession, "Plugin " + plugin.getDetails().getNameVersion() + " was already enabled.");
@@ -198,7 +199,7 @@ public class Plugins extends Command {
         } else {
             String nearMatches = "";
             for(Plugin plugin : pluggableReturn){
-                nearMatches = nearMatches + plugin.getDetails().getNameVersion() + ", ";
+                nearMatches = nearMatches + plugin.getDetails().getNAME().toLowerCase() + ", ";
             }
             sendMessage(playerSession, "Could not find a Plugin named \"" + pluginName + "\". Here are some near matches: " + StringUtilities.trimCommaForPeriod(nearMatches));
             return null;

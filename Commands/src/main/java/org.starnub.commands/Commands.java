@@ -28,7 +28,8 @@ public class Commands extends Command {
         EndNode variable = new EndNode("{command-name}", ArgumentType.VARIABLE, this::command);
         EndNode list = new EndNode("list", ArgumentType.STATIC, this::commandList);
         EndNode mineVariable = new EndNode("{command-name}", ArgumentType.VARIABLE, this::mineArgs);
-        SubNode mine = new SubNode("mine", this::mine, mineVariable);
+        EndNode mineAll = new EndNode("all", ArgumentType.VARIABLE, this::mine);
+        SubNode mine = new SubNode("mine", mineAll, mineVariable);
         EndNode lookupVariable = new EndNode("{player-identifier} Optional: {command-name}", ArgumentType.VARIABLE, this::lookup);
         SubNode lookup = new SubNode("lookup", lookupVariable);
         EndNode infoVariable = new EndNode("{command-name} Optional: {name, owner, progamlanguage, version, size, author, url, mainargs, canuse, description, dependancies, permissions} - Can use more then one at a time.", ArgumentType.VARIABLE, this::commandInfo);
@@ -166,7 +167,7 @@ public class Commands extends Command {
         } else {
             String nearMatches = "";
             for(Command command : pluggableReturn){
-                nearMatches = nearMatches + command.getDetails().getNameVersion() + ", ";
+                nearMatches = nearMatches + command.getDetails().getNAME().toLowerCase() + ", ";
             }
             sendMessage(playerSession, "Could not find a Command named \"" + commandName + "\". Here are some near matches: " + StringUtilities.trimCommaForPeriod(nearMatches));
             return null;
@@ -345,37 +346,37 @@ public class Commands extends Command {
     }
 
     public void lookup(PlayerSession playerSession, int argsCount, String[] args){
-        String playerSessionLookupString = args[1];
-        PlayerSession playerSessionLookup = PlayerSession.getSession(playerSessionLookupString);
-        if (playerSessionLookup == null){
-            sendMessage(playerSession, "We could not find a online player with the identifier \"" + playerSessionLookupString + "\".");
-        } else {
-            String availableCommands = getAvailableCommands(playerSessionLookup);
-            String cleanNickName = playerSessionLookup.getCleanNickName();
-            if (availableCommands == null) {
-                sendMessage(playerSession, "It appears the player \"" + cleanNickName + "\" does not have any permissions for commands.");
+        if (argsCount == 2) {
+            String playerSessionLookupString = args[1];
+            PlayerSession playerSessionLookup = PlayerSession.getSession(playerSessionLookupString);
+            if (playerSessionLookup == null) {
+                sendMessage(playerSession, "We could not find a online player with the identifier \"" + playerSessionLookupString + "\".");
             } else {
-                sendMessage(playerSession, cleanNickName + "'s: " + availableCommands);
+                String availableCommands = getAvailableCommands(playerSessionLookup);
+                String cleanNickName = playerSessionLookup.getCleanNickName();
+                if (availableCommands == null) {
+                    sendMessage(playerSession, "It appears the player \"" + cleanNickName + "\" does not have any permissions for commands.");
+                } else {
+                    sendMessage(playerSession, cleanNickName + "'s: " + availableCommands);
+                }
             }
-        }
-    }
-
-    public void lookupArgs(PlayerSession playerSession, int argsCount, String[] args){
-        String playerSessionLookupString = args[1];
-        Command command = getCommand(playerSession, args[2]);
-        if (command == null){
-            return;
-        }
-        PlayerSession playerSessionLookup = PlayerSession.getSession(playerSessionLookupString);
-        if (playerSessionLookup == null){
-            sendMessage(playerSession, "We could not find a online player with the identifier \"" + playerSessionLookupString + "\".");
         } else {
-            String availableCommands = getMainArgsList(playerSessionLookup, command);
-            String cleanNickName = playerSessionLookup.getCleanNickName();
-            if (availableCommands == null) {
-                sendMessage(playerSession, "It appears the player \"" + cleanNickName + "\" does not have any permissions for commands.");
+            String playerSessionLookupString = args[1];
+            Command command = getCommand(playerSession, args[2]);
+            if (command == null){
+                return;
+            }
+            PlayerSession playerSessionLookup = PlayerSession.getSession(playerSessionLookupString);
+            if (playerSessionLookup == null){
+                sendMessage(playerSession, "We could not find a online player with the identifier \"" + playerSessionLookupString + "\".");
             } else {
-                sendMessage(playerSession, cleanNickName + "'s: " + availableCommands);
+                String availableCommands = getMainArgsList(playerSessionLookup, command);
+                String cleanNickName = playerSessionLookup.getCleanNickName();
+                if (availableCommands == null) {
+                    sendMessage(playerSession, "It appears the player \"" + cleanNickName + "\" does not have any permissions for commands.");
+                } else {
+                    sendMessage(playerSession, cleanNickName + "'s: " + availableCommands);
+                }
             }
         }
     }

@@ -1,0 +1,14 @@
+{
+     'organization': 'StarNub',
+     'command': 'JoinLeave',
+     'version': 1.0,
+     'class': 'org.starnub.commands.JoinLeave',
+     'unloadable': true,
+     'main_args':[],
+     'custom_split': 0,
+     'can_use': 2,
+     'dependencies': ['JoinLeaveBroadcast'],
+     'author': 'Underbalanced',
+     'url': 'http://www.starnub.org',
+     'description': 'This will unsubscribe or subscribe you to player join and leave messages. This requires JoinLeaveMessages plugin.'
+}
