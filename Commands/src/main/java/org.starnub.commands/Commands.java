@@ -21,9 +21,10 @@ import java.util.stream.Stream;
 
 public class Commands extends Command {
 
-    private final RootNode ROOT_COMMAND_NODE;
+    private RootNode ROOT_COMMAND_NODE;
 
-    public Commands() {
+    @Override
+    public void onEnable() {
         EndNode all = new EndNode("all", ArgumentType.STATIC, this::allCommands);
         EndNode variable = new EndNode("{command-name}", ArgumentType.VARIABLE, this::command);
         EndNode list = new EndNode("list", ArgumentType.STATIC, this::commandList);
@@ -42,7 +43,8 @@ public class Commands extends Command {
     }
 
     @Override
-    public void onRegister() {
+    public void onDisable() {
+
     }
 
     @Override

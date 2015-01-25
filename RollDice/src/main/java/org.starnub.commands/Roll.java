@@ -8,9 +8,10 @@ import org.starnub.utilities.strings.StringUtilities;
 
 public class Roll extends Command {
 
-    private final RootNode ROOT_COMMAND_NODE;
+    private  RootNode ROOT_COMMAND_NODE;
 
-    public Roll() {
+    @Override
+    public void onEnable() {
         EndNode dice = new EndNode("{#d#}", ArgumentType.VARIABLE, this::playingDice);
         EndNode play = new EndNode("play", ArgumentType.STATIC, this::wantToPlayDice);
         SubNode baseNode = new SubNode("roll" , play, dice);
@@ -18,8 +19,7 @@ public class Roll extends Command {
     }
 
     @Override
-    public void onRegister() {
-        /* No events to register */
+    public void onDisable() {
     }
 
     @Override

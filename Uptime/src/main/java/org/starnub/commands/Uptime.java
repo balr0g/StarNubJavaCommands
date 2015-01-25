@@ -9,22 +9,24 @@ import org.starnub.utilities.time.DateAndTimes;
 
 public class Uptime extends Command {
 
-    private final RootNode ROOT_COMMAND_NODE;
+    private RootNode ROOT_COMMAND_NODE;
     private long starboundUptime = 0L;
     private long starnubUptime = 0L;
 
-    public Uptime() {
+    @Override
+    public void onEnable() {
         EndNode starbound = new EndNode("starbound", ArgumentType.STATIC, this::starbound);
         EndNode starnub = new EndNode("starnub", ArgumentType.STATIC, this::starnub);
         EndNode allTime = new EndNode("all", ArgumentType.STATIC, this::allTime);
         SubNode baseNode = new SubNode("uptime", starbound, starnub, allTime);
         ROOT_COMMAND_NODE = new RootNode(baseNode);
+        newStarNubEventSubscription(Priority.LOW, "StarNub_Uptime", objectEvent -> starnubUptime = (long) objectEvent.getEVENT_DATA());
+        newStarNubEventSubscription(Priority.LOW, "Starbound_Uptime",objectEvent -> starboundUptime = (long) objectEvent.getEVENT_DATA());
     }
 
     @Override
-    public void onRegister() {
-        newStarNubEventSubscription(Priority.LOW, "StarNub_Uptime", objectEvent -> starnubUptime = (long) objectEvent.getEVENT_DATA());
-        newStarNubEventSubscription(Priority.LOW, "Starbound_Uptime",objectEvent -> starboundUptime = (long) objectEvent.getEVENT_DATA());
+    public void onDisable() {
+
     }
 
     @Override

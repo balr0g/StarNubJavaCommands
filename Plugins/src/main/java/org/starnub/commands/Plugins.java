@@ -18,9 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Plugins extends Command {
 
-    private final RootNode ROOT_COMMAND_NODE;
+    private RootNode ROOT_COMMAND_NODE;
 
-    public Plugins() {
+    @Override
+    public void onEnable() {
         EndNode all = new EndNode("all", ArgumentType.STATIC, this::allPlugins);
         EndNode variable = new EndNode("{plugin-name}", ArgumentType.VARIABLE, this::plugin);
         EndNode infoVariable = new EndNode("{plugin-name} Optional: {name, owner, progamlanguage, version, size, author, url, description, dependancies, permissions} - Can use more then one at a time.", ArgumentType.VARIABLE, this::pluginInfo);
@@ -37,7 +38,7 @@ public class Plugins extends Command {
     }
 
     @Override
-    public void onRegister() {
+    public void onDisable() {
 
     }
 
@@ -100,7 +101,6 @@ public class Plugins extends Command {
                 }
                 if (!plugin.isEnabled()) {
                     plugin.enable();
-                    plugin.register();
                     sendMessage(playerSession, "Plugin " + plugin.getDetails().getNameVersion() + " was successfully enabled.");
                 } else {
                     sendMessage(playerSession, "Plugin " + plugin.getDetails().getNameVersion() + " was already enabled.");
